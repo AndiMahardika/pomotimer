@@ -1,10 +1,7 @@
-const tasks = [
-  {
-    title : 'Pemograman web',
-    id: 123,
-    status: false
-  },
-]
+const SAVED_EVENT = 'saved-task';
+const STORAGE_KEY = 'POMOTIMER_APPS';
+
+const tasks = []
 
 let speed = 1;
 
@@ -27,7 +24,10 @@ document.addEventListener('DOMContentLoaded', function(){
     boxInput.classList.toggle('hidden')
     addButton.removeAttribute('disabled', true)
   })
-  render(tasks)
+
+  if(isStorageExist()){
+    loadDataFromStorage()
+  }
 })
 
 addButton.addEventListener('click', function(){
@@ -52,6 +52,7 @@ function addTask(){
 
   inputTask.reset()
   render(tasks)
+  saveData()
 }
 
 function generateId(){
@@ -74,7 +75,7 @@ function itemTask(item){
     <div class="">
       <span class="text-xl me-2 cursor-pointer text-red-600"><i class="fa-solid fa-square-check"></i></span>
       <span class="text-xl me-2 cursor-pointer"><i class="fa-solid fa-pen-to-square"></i></span>
-      <span class="text-xl me-2 cursor-pointer"><i class="fa-solid fa-trash btn-delete" data-taskid="${item.id}"></i></span>
+      <span class="text-xl me-2 cursor-pointer" data-taskid="${item.id}"><i class="fa-solid fa-trash btn-delete" data-taskid="${item.id}"></i></span>
     </div>  
   </div>
 </div>`
@@ -105,6 +106,7 @@ function removeTask(taskid){
 
   tasks.splice(taskTarget, 1)
   render(tasks)
+  saveData()
 }
 
 document.addEventListener('click', function(event){
@@ -115,6 +117,7 @@ document.addEventListener('click', function(event){
     console.log(taskId)
     removeTask(taskId)
   }
+
 })
 
 // waktu
@@ -172,7 +175,7 @@ function countdown(){
       breakWord.classList.toggle('hidden')
       timer.classList.toggle('mt-10')
       isBreak = false;
-      minutes = 1
+      minutes = 30
       seconds = 0
     }
   }
@@ -212,10 +215,12 @@ shortBtn.addEventListener('click', function(){
     shortBtn.classList.remove('bg-[#9CCDDC]')
     shortBtn.classList.add('border-slate-700','bg-[#CED7E0]')
     shortBtn.innerHTML = 'short break <i class="fa-solid fa-check"></i>'
+    shortBtn.setAttribute('disabled', true)
     longBtn.classList.remove('border-slate-700','bg-[#CED7E0]')
     longBtn.classList.add('bg-[#9CCDDC]')
     longBtn.innerHTML = 'long break'
-    timerBreak = shortBtn.dataset.time
+    longBtn.removeAttribute('disabled')
+    timerBreak = shortBtn.dataset.time;
   } else {
     shortBtn.classList.remove('border-slate-700','bg-[#CED7E0]')
     shortBtn.classList.add('bg-[#9CCDDC]')
@@ -229,9 +234,11 @@ longBtn.addEventListener('click', function(){
     longBtn.classList.remove('bg-[#9CCDDC]')
     longBtn.classList.add('border-slate-700','bg-[#CED7E0]')
     longBtn.innerHTML = 'long break <i class="fa-solid fa-check"></i>'
+    longBtn.setAttribute('disabled', true)
     shortBtn.classList.remove('border-slate-700','bg-[#CED7E0]')
     shortBtn.classList.add('bg-[#9CCDDC]')
     shortBtn.innerHTML = 'short break'
+    shortBtn.removeAttribute('disabled')
     timerBreak = longBtn.dataset.time
   } else {
     longBtn.classList.remove('border-slate-700','bg-[#CED7E0]')
@@ -239,3 +246,37 @@ longBtn.addEventListener('click', function(){
   }
   // console.log(timerBreak)
 })
+
+
+// Storage
+function isStorageExist(){
+  if(typeof(Storage) == undefined){
+    alert('Browser kamu tidak mendukung local storage')
+    return false
+  } 
+  return true
+}
+
+function saveData(){
+  if(isStorageExist()){
+    const parsed = JSON.stringify(tasks);
+    localStorage.setItem(STORAGE_KEY,parsed)
+    // document.dispatchEvent(new Event(SAVED_EVENT));
+  }
+}
+
+// document.addEventListener(SAVED_EVENT, function(){
+
+// })
+
+function loadDataFromStorage(){
+  const serializedData = localStorage.getItem(STORAGE_KEY);
+  const data = JSON.parse(serializedData)
+
+  if(data != null){
+    for (const task of data) {
+      tasks.push(task)
+    }
+  }
+  render(tasks)
+}
