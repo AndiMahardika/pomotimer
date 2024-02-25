@@ -14,13 +14,15 @@
     <div class="flex flex-wrap w-full p-1 md:p-0 relative">
       <div class="w-full md:w-1/2 md:h-[563px] py-32 border-4 border-[#062C43] bg-[#5591A9]">
         <div class="flex justify-center items-center gap-3">
-          <button type="button" class="border-4 px-3 rounded-md font-semibold bg-[#9CCDDC] text-slate-800 transition-all duration-300 ease-in-out focus:border-slate-700 focus:bg-[#CED7E0]">short break <i class="fa-solid fa-check"></i> </button>
-          <button class="border-4 px-3 rounded-md font-semibold bg-[#9CCDDC] text-slate-800 transition-all duration-300 ease-in-out focus:border-slate-700 focus:bg-[#CED7E0]">long break </button>
+          <button type="button" id="short-button" class="border-4 px-3 rounded-md font-semibold text-slate-800 transition-all duration-300 ease-in-out border-slate-700 bg-[#CED7E0]" data-time="05:00">short break <i class="fa-solid fa-check"></i></button>
+          <button type="button" id="long-button" class="border-4 px-3 rounded-md font-semibold bg-[#9CCDDC] text-slate-800 transition-all duration-300 ease-in-out" data-time="10:00">long break</button>
         </div>
         <h4 class="hidden text-center font-bold text-3xl mt-5 text-[#062C43]" id="break-word">Break Time 💤</h4>
         <h1 class="text-9xl text-center mb-10 mt-10 font-bold font-mono text-[#CED7E0] time">01:00</h1>
         <div class="flex justify-center text-slate-800">
-          <button class="mx-auto border-4 px-4 rounded-md text-2xl font-bold bg-[#9CCDDC] hover:bg-[#CED7E0] transition-all duration-300 ease-in-out hover:border-slate-700 restart-button">
+          <button class="mx-auto border-4 px-4 rounded-md text-2xl font-bold bg-[#9CCDDC] hover:bg-[#CED7E0] transition-all duration-300 ease-in-out hover:border-slate-700 restart-button relative group">
+            <div class="invisible absolute w-36 -top-14 left-5 py-1 px-2 text-sm font-semibold rounded-md bg-[#9CCDDC] border-4 group-hover:visible">Restart Pomodoro</div>
+            <div class="invisible absolute -top-[27px] right-0 w-3 h-3 border-r-4 border-b-4 bg-[#9CCDDC] rotate-45 rounded-sm group-hover:visible"></div>
             <i class="fa-solid fa-arrow-rotate-right"></i>
           </button>
           <button class="mx-auto border-4 px-14 rounded-md text-2xl font-bold bg-[#9CCDDC] hover:bg-[#CED7E0] transition-all duration-300 ease-in-out hover:border-slate-700 play-button"><i class="fa-solid fa-play"></i></button>
@@ -56,7 +58,7 @@
               <div class="">
                 <span class="text-xl me-2 cursor-pointer text-green-600"><i class="fa-solid fa-square-check"></i></span>
                 <span class="text-xl me-2 cursor-pointer"><i class="fa-solid fa-pen-to-square"></i></span>
-                <span class="text-xl me-2 cursor-pointer"><i class="fa-solid fa-trash"></i></span>
+                <span class="text-xl me-2 cursor-pointer"><i class="fa-solid fa-trash" data-taskid="${item.id}"></i></span>
               </div>
             </div>
           </div> -->

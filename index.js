@@ -17,6 +17,8 @@ const inputTask = document.querySelector('#input-task')
 const restarBtn = document.querySelector('.restart-button')
 const speedBtn = document.querySelector('.speed-up-button')
 const breakWord = document.querySelector('#break-word')
+const shortBtn = document.querySelector('#short-button')
+const longBtn = document.querySelector('#long-button')
 
 document.addEventListener('DOMContentLoaded', function(){
   inputTask.addEventListener('submit', function(e){
@@ -25,6 +27,7 @@ document.addEventListener('DOMContentLoaded', function(){
     boxInput.classList.toggle('hidden')
     addButton.removeAttribute('disabled', true)
   })
+  render(tasks)
 })
 
 addButton.addEventListener('click', function(){
@@ -116,9 +119,9 @@ document.addEventListener('click', function(event){
 
 // waktu
 let isPaused = true
-let breakTime = false
+let isBreak = false
+let timerBreak = shortBtn.dataset.time
 let timerInterval;
-
 if(isPaused){
   speedBtn.setAttribute('disabled', true)
 }
@@ -142,6 +145,9 @@ restarBtn.addEventListener('click', function(){
   isPaused = true;
   clearInterval(timerInterval)
   playBtn.innerHTML = `<i class="fa-solid fa-play"></i>`
+  isBreak = false;
+  breakWord.classList.add('hidden')
+  timer.classList.add('mt-10')
 })
 
 function countdown(){
@@ -151,16 +157,21 @@ function countdown(){
   seconds = parseInt(seconds)
 
   if(minutes == 0 && seconds == 0){
-    if(!breakTime){
+    if(!isBreak){
       breakWord.classList.toggle('hidden')
       timer.classList.toggle('mt-10')
-      breakTime = true;
-      minutes = 1
-      seconds = 0
+
+      isBreak = true;
+      [minutes, seconds] = timerBreak.split(':')
+      minutes = parseInt(minutes)
+      seconds = parseInt(seconds)
+
+      // minutes = 1
+      // seconds = 0
     } else {
       breakWord.classList.toggle('hidden')
       timer.classList.toggle('mt-10')
-      breakTime = false;
+      isBreak = false;
       minutes = 1
       seconds = 0
     }
@@ -193,4 +204,38 @@ speedBtn.addEventListener('click', function(){
     }
   }
   speedBtn.innerHTML = speed == 1 ? `<i class="fa-solid fa-angles-right"></i>` : `${speed}<i class="fa-solid fa-angles-right"></i>`
+})
+
+//tombol break
+shortBtn.addEventListener('click', function(){
+  if(shortBtn.classList.contains('bg-[#9CCDDC]')){ 
+    shortBtn.classList.remove('bg-[#9CCDDC]')
+    shortBtn.classList.add('border-slate-700','bg-[#CED7E0]')
+    shortBtn.innerHTML = 'short break <i class="fa-solid fa-check"></i>'
+    longBtn.classList.remove('border-slate-700','bg-[#CED7E0]')
+    longBtn.classList.add('bg-[#9CCDDC]')
+    longBtn.innerHTML = 'long break'
+    timerBreak = shortBtn.dataset.time
+  } else {
+    shortBtn.classList.remove('border-slate-700','bg-[#CED7E0]')
+    shortBtn.classList.add('bg-[#9CCDDC]')
+    longBtn.innerHTML = 'short break'
+  }
+  // console.log(timerBreak)
+})
+
+longBtn.addEventListener('click', function(){
+  if(longBtn.classList.contains('bg-[#9CCDDC]')){ 
+    longBtn.classList.remove('bg-[#9CCDDC]')
+    longBtn.classList.add('border-slate-700','bg-[#CED7E0]')
+    longBtn.innerHTML = 'long break <i class="fa-solid fa-check"></i>'
+    shortBtn.classList.remove('border-slate-700','bg-[#CED7E0]')
+    shortBtn.classList.add('bg-[#9CCDDC]')
+    shortBtn.innerHTML = 'short break'
+    timerBreak = longBtn.dataset.time
+  } else {
+    longBtn.classList.remove('border-slate-700','bg-[#CED7E0]')
+    longBtn.classList.add('bg-[#9CCDDC]')
+  }
+  // console.log(timerBreak)
 })
