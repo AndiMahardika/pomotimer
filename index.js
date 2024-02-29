@@ -41,7 +41,7 @@ closeBtn.addEventListener('click', function(){
 })
 
 function addTask(){
-  const title = document.querySelector('#input-title').value
+  const title = capitalFirsWord(document.querySelector('#input-title').value)
   const status = false;
   const id = generateId()
 
@@ -279,4 +279,24 @@ function loadDataFromStorage(){
     }
   }
   render(tasks)
+}
+
+
+// function capitalFirsWord
+function capitalFirsWord(word){
+  const arr = word.split("")
+  const result = []
+  for (let i = 0; i < arr.length; i++) {
+    if(i == 0){
+      arr[i] = arr[i].toUpperCase()
+      // result.push(arr[i])
+    } else if(arr[i] == ' '){
+      arr[i+1] = arr[i+1].toUpperCase()
+      // result.push(arr[i+1])
+    } else if (arr[i] == arr[i].toUpperCase() && arr[i-1] != ' '){
+      arr[i] = arr[i].toLowerCase()
+    }
+    result.push(arr[i])
+  }
+  return result.join("")
 }
