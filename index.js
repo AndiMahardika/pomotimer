@@ -1,8 +1,20 @@
 const SAVED_EVENT = 'saved-task';
 const STORAGE_KEY = 'POMOTIMER_APPS';
 
-const tasks = []
+// {
+//   title: "Manual",
+//   id: 12345,
+//   status: false,
+//   curTime: "20:00"
+// },
+// {
+//   title: "Pemograman WEB",
+//   id: 4556,
+//   status: false,
+//   curTime: "30:00"
+// }
 
+const tasks = []
 let speed = 1;
 
 const playBtn = document.querySelector('.play-button')
@@ -28,6 +40,8 @@ document.addEventListener('DOMContentLoaded', function(){
   if(isStorageExist()){
     loadDataFromStorage()
   }
+
+  innerTime()
 })
 
 addButton.addEventListener('click', function(){
@@ -42,11 +56,12 @@ closeBtn.addEventListener('click', function(){
 
 function addTask(){
   const title = capitalFirsWord(document.querySelector('#input-title').value)
+  const curTime = "20:00";
   const status = false;
-  const id = generateId()
+  const id = generateId();
 
   if(title != ''){
-    const taskObject = generateTaskObject(id, title, status)
+    const taskObject = generateTaskObject(id, title, curTime, status)
     tasks.push(taskObject)
   }
 
@@ -59,18 +74,24 @@ function generateId(){
   return +new Date()
 }
 
-function generateTaskObject(id, title, status){
+function generateTaskObject(id, title, curTime, status){
   return {
     id,
     title,
+    curTime,
     status
   }
 } 
 
+function taskSelect(taskTarget){
+  tasks.forEach(task => task.status = false); // setel semua status ke false
+  taskTarget.status = true; // setel status target ke true
+}
+// border-slate-700
 function itemTask(item){
-  return `<div class="items mb-3 bg-[#CED7E0] text-slate-800">
-  <div class="border-2 flex items-center justify-between">
-    <div class="h-10 w-3 bg-red-600"></div>
+  return `<div class="mb-3 bg-[#CED7E0] text-slate-800">
+  <div class="${item.status ? 'border-4 border-slate-700' : 'border-2'} flex items-center justify-between items " data-curtime="${item.curTime}" data-taskid="${item.id}">
+    <div class="h-10 w-3 bg-[#5591A9]"></div>
     <h4 class="text-center text-md font-semibold">${item.title}</h4>
     <div class="">
       <span class="text-xl me-2 cursor-pointer text-red-600"><i class="fa-solid fa-square-check"></i></span>
@@ -99,6 +120,23 @@ function findIndexTask(taskid){
   return -1
 }
 
+function findTask(taskid){
+  for (const taskTarget of tasks) {
+    if(taskTarget.id == taskid){
+      return taskTarget;
+    }
+  }
+  return null;
+}
+
+function innerTime(){
+  const activeTask = tasks.find(task => task.status);
+  if (activeTask) {
+    timer.innerText = activeTask.curTime;
+    prevTime = activeTask.curTime;
+  } 
+}
+
 function removeTask(taskid){
   const taskTarget = findIndexTask(taskid)
 
@@ -118,13 +156,35 @@ document.addEventListener('click', function(event){
     removeTask(taskId)
   }
 
+  if(target.classList.contains('items')){
+    target.classList.toggle('border-4');
+    target.classList.toggle('border-slate-700');
+    const taskTarget = findTask(target.dataset.taskid);
+    taskTarget.status = !taskTarget.status;
+    taskSelect(taskTarget)
+    saveData()
+    render(tasks)
+    innerTime()
+    
+    isPaused = true;
+    playBtn.innerHTML = '<i class="fa-solid fa-play"></i>'
+    speedBtn.setAttribute('disabled', true)
+    clearInterval(timerInterval)
+
+    // const curTime = target.dataset.curtime;
+    // const taskId = target.dataset.taskid;
+    // timer.innerText = curTime;
+    // const taskTarget = findTask(taskId);  
+  }
 })
 
 // waktu
-let isPaused = true
+let isPaused = true;
 let isBreak = false
 let timerBreak = shortBtn.dataset.time
 let timerInterval;
+let prevTime = innerTime();
+
 if(isPaused){
   speedBtn.setAttribute('disabled', true)
 }
@@ -144,7 +204,7 @@ playBtn.addEventListener('click', function(){
 })
 
 restarBtn.addEventListener('click', function(){
-  timer.innerText = '01:00'
+  timer.innerText = '30:00'
   isPaused = true;
   clearInterval(timerInterval)
   playBtn.innerHTML = `<i class="fa-solid fa-play"></i>`
@@ -196,6 +256,8 @@ function countdown(){
   }
 
   timer.innerText = `${minutes}:${seconds}`
+  prevTime = `${minutes}:${seconds}`;
+
   timerInterval = setTimeout(countdown, 1000 / speed)
 }
 
@@ -207,6 +269,7 @@ speedBtn.addEventListener('click', function(){
     }
   }
   speedBtn.innerHTML = speed == 1 ? `<i class="fa-solid fa-angles-right"></i>` : `${speed}<i class="fa-solid fa-angles-right"></i>`
+  console.log(prevTime)
 })
 
 //tombol break
