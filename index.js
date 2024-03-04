@@ -16,10 +16,9 @@ const speedBtn = document.querySelector('.speed-up-button')
 const breakWord = document.querySelector('#break-word')
 const shortBtn = document.querySelector('#short-button')
 const longBtn = document.querySelector('#long-button')
-const btnAudio = document.querySelector('#btn-audio')
 
 // sound
-let sound = new Audio("sound/JKT48 - Pesawat Kertas 365 Hari.mp3")
+let sound = new Audio("sound/JKT48 - Pesawat Kertas 365 Hari.mp3");
 
 document.addEventListener('DOMContentLoaded', function(){
   inputTask.addEventListener('submit', function(e){
@@ -166,6 +165,10 @@ document.addEventListener('click', function(event){
     breakWord.classList.add('hidden');
     timer.classList.add('mt-10')
     clearInterval(timerInterval)  
+
+    // stop sound 
+    sound.currentTime = 0;
+    sound.pause()
   }
 })
 
@@ -298,13 +301,13 @@ shortBtn.addEventListener('click', function(){
     longBtn.classList.add('bg-[#9CCDDC]')
     longBtn.innerHTML = 'long break'
     longBtn.removeAttribute('disabled')
+    sound = new Audio("sound/JKT48 - Pesawat Kertas 365 Hari.mp3")
     timerBreak = shortBtn.dataset.time;
   } else {
     shortBtn.classList.remove('border-slate-700','bg-[#CED7E0]')
     shortBtn.classList.add('bg-[#9CCDDC]')
     longBtn.innerHTML = 'short break'
   }
-  // console.log(timerBreak)
 })
 
 longBtn.addEventListener('click', function(){
@@ -317,12 +320,12 @@ longBtn.addEventListener('click', function(){
     shortBtn.classList.add('bg-[#9CCDDC]')
     shortBtn.innerHTML = 'short break'
     shortBtn.removeAttribute('disabled')
+    sound = new Audio("sound/JKT48 - SEVENTEEN.mp3")
     timerBreak = longBtn.dataset.time
   } else {
     longBtn.classList.remove('border-slate-700','bg-[#CED7E0]')
     longBtn.classList.add('bg-[#9CCDDC]')
   }
-  // console.log(timerBreak)
 })
 
 
