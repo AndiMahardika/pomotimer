@@ -365,6 +365,7 @@ function loadDataFromStorage(){
 
 // function capitalFirsWord
 function capitalFirsWord(word){
+  word = word.trim()
   const arr = word.split("")
   const result = []
   for (let i = 0; i < arr.length; i++) {
