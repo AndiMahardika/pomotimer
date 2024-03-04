@@ -16,6 +16,10 @@ const speedBtn = document.querySelector('.speed-up-button')
 const breakWord = document.querySelector('#break-word')
 const shortBtn = document.querySelector('#short-button')
 const longBtn = document.querySelector('#long-button')
+const btnAudio = document.querySelector('#btn-audio')
+
+// sound
+let sound = new Audio("sound/JKT48 - Pesawat Kertas 365 Hari.mp3")
 
 document.addEventListener('DOMContentLoaded', function(){
   inputTask.addEventListener('submit', function(e){
@@ -44,7 +48,7 @@ closeBtn.addEventListener('click', function(){
 
 function addTask(){
   const title = capitalFirsWord(document.querySelector('#input-title').value)
-  const curTime = "30:00";
+  const curTime = "01:00";
   const status = false;
   const id = generateId();
 
@@ -156,8 +160,11 @@ document.addEventListener('click', function(event){
     innerTime()
     
     isPaused = true;
-    playBtn.innerHTML = '<i class="fa-solid fa-play"></i>'
-    speedBtn.setAttribute('disabled', true)
+    isBreak = false;
+    playBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
+    speedBtn.setAttribute('disabled', true);
+    breakWord.classList.add('hidden');
+    timer.classList.add('mt-10')
     clearInterval(timerInterval)  
   }
 })
@@ -179,16 +186,24 @@ playBtn.addEventListener('click', function(){
     playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>'
     speedBtn.removeAttribute('disabled', true)
     countdown()
+    if(isBreak){
+      sound.play()
+    } else {
+      sound.currentTime = 0;
+      sound.pause()
+    }
   } else {
     isPaused = true;
     playBtn.innerHTML = '<i class="fa-solid fa-play"></i>'
     speedBtn.setAttribute('disabled', true)
     clearInterval(timerInterval)
+    sound.pause()
   }
+  saveData()
 })
 
 restarBtn.addEventListener('click', function(){
-  const restartTime = '30:00'
+  const restartTime = '01:00'
   timer.innerText = restartTime;
   if(globalTime){
     globalTime.curTime = restartTime;
@@ -199,6 +214,8 @@ restarBtn.addEventListener('click', function(){
   isBreak = false;
   breakWord.classList.add('hidden')
   timer.classList.add('mt-10')
+  sound.currentTime = 0;
+  sound.pause()
 })
 
 function countdown(){
@@ -217,14 +234,17 @@ function countdown(){
       minutes = parseInt(minutes)
       seconds = parseInt(seconds)
 
+      sound.play()
       // minutes = 1
       // seconds = 0
     } else {
       breakWord.classList.toggle('hidden')
       timer.classList.toggle('mt-10')
       isBreak = false;
-      minutes = 30
+      minutes = 1
       seconds = 0
+      sound.currentTime = 0;
+      sound.pause()
     }
   }
 
@@ -244,12 +264,16 @@ function countdown(){
   }
 
   timer.innerText = `${minutes}:${seconds}`
-  prevTime = `${minutes}:${seconds}`;
+  if(isBreak){
+    prevTime = '01:00';
+  } else {
+    prevTime = `${minutes}:${seconds}`;
+  }
   // globalTime.curTime = prevTime;
   if (globalTime) {
     globalTime.curTime = prevTime;
-  }
-
+  } 
+  
   timerInterval = setTimeout(countdown, 1000 / speed)
 }
 
