@@ -18,7 +18,7 @@ const shortBtn = document.querySelector('#short-button')
 const longBtn = document.querySelector('#long-button')
  
 // sound
-let sound = new Audio("sound/Vestia Zeta.mp3");
+let sound = new Audio("sound/JKT48 - Pesawat Kertas 365 Hari.mp3");
 
 document.addEventListener('DOMContentLoaded', function(){
   inputTask.addEventListener('submit', function(e){
@@ -46,7 +46,7 @@ closeBtn.addEventListener('click', function(){
 
 function addTask(){
   const title = capitalFirsWord(document.querySelector('#input-title').value)
-  const curTime = "01:00";
+  const curTime = "30:00";
   const status = false;
   const id = generateId();
 
@@ -54,6 +54,9 @@ function addTask(){
     const taskObject = generateTaskObject(id, title, curTime, status)
     tasks.push(taskObject)
   }
+
+  boxInput.classList.toggle('hidden')
+  addButton.removeAttribute('disabled', true)
 
   inputTask.reset()
   render(tasks)
@@ -209,7 +212,7 @@ playBtn.addEventListener('click', function(){
 })
 
 restarBtn.addEventListener('click', function(){
-  const restartTime = '01:00'
+  const restartTime = '30:00'
   timer.innerText = restartTime;
   if(globalTime){
     globalTime.curTime = restartTime;
@@ -278,7 +281,7 @@ function countdown(){
 
   timer.innerText = `${minutes}:${seconds}`
   if(isBreak){
-    prevTime = '01:00';
+    prevTime = '30:00';
   } else {
     prevTime = `${minutes}:${seconds}`;
   }
@@ -302,9 +305,9 @@ speedBtn.addEventListener('click', function(){
 
 function changeSound(time){
   if(time == '05:00'){
-    sound = new Audio("sound/Vestia Zeta.mp3");
+    sound = new Audio("sound/JKT48 - Pesawat Kertas 365 Hari.mp3");
   } else {
-    sound = new Audio("sound/Aku Gak Halu.mp3");
+    sound = new Audio("sound/JKT48 - SEVENTEEN.mp3");
   }
   return sound;
 }
@@ -316,14 +319,28 @@ function repeatSound() {
 }
 
 // fungsi edit
+const btnCloseEdit = document.querySelector('.cls-btn-edit')
+const boxEdit = document.querySelector('.edit-box');
+const formEdit = document.querySelector('#edit-task')
+
+btnCloseEdit.addEventListener('click', function(){
+  boxEdit.classList.toggle('hidden');
+  addButton.removeAttribute('disabled', true)
+})
+
 function editTask(taskId) {
   const taskTarget = findTask(taskId);
-  const editForm = document.querySelector('#edit-task');
-  editForm.classList.toggle('hidden');
+  const inputEditTitle = document.querySelector('#title-edit')
+  inputEditTitle.value = taskTarget.title;
+  boxEdit.classList.toggle('hidden');
+  addButton.setAttribute('disabled', true);
 
-  editForm.addEventListener('submit', function(e){
+  formEdit.addEventListener('submit', function(e){
     e.preventDefault();
-    taskTarget.title = document.querySelector('#title-edit').value
+    taskTarget.title = capitalFirsWord(inputEditTitle.value);
+
+    boxEdit.classList.toggle('hidden');
+    addButton.removeAttribute('disabled', true)
 
     saveData()
     render(tasks)
@@ -342,7 +359,6 @@ shortBtn.addEventListener('click', function(){
     longBtn.classList.add('bg-[#9CCDDC]')
     longBtn.innerHTML = 'long break'
     longBtn.removeAttribute('disabled')
-    // sound = new Audio("sound/JKT48 - Pesawat Kertas 365 Hari.mp3")
     timerBreak = shortBtn.dataset.time;
     changeSound(timerBreak)
   } else {
@@ -362,7 +378,6 @@ longBtn.addEventListener('click', function(){
     shortBtn.classList.add('bg-[#9CCDDC]')
     shortBtn.innerHTML = 'short break'
     shortBtn.removeAttribute('disabled')
-    // sound = new Audio("sound/JKT48 - SEVENTEEN.mp3")
     timerBreak = longBtn.dataset.time
     changeSound(timerBreak)
   } else {
