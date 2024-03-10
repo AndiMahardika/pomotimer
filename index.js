@@ -16,15 +16,14 @@ const speedBtn = document.querySelector('.speed-up-button')
 const breakWord = document.querySelector('#break-word')
 const shortBtn = document.querySelector('#short-button')
 const longBtn = document.querySelector('#long-button')
-
+ 
 // sound
-let sound = new Audio("sound/JKT48 - Pesawat Kertas 365 Hari.mp3");
+let sound = new Audio("sound/Vestia Zeta.mp3");
 
 document.addEventListener('DOMContentLoaded', function(){
   inputTask.addEventListener('submit', function(e){
     e.preventDefault()
     addTask()
-    boxInput.classList.toggle('hidden')
     addButton.removeAttribute('disabled', true)
   })
 
@@ -86,7 +85,7 @@ function itemTask(item){
     <h4 class="text-center text-md font-semibold">${item.title}</h4>
     <div class="">
       <span class="text-xl me-2 cursor-pointer ${item.status ? 'text-green-600': 'text-red-600'}"><i class="fa-solid fa-square-check"></i></span>
-      <span class="text-xl me-2 cursor-pointer"><i class="fa-solid fa-pen-to-square"></i></span>
+      <span class="text-xl me-2 cursor-pointer" data-taskid="${item.id}"><i class="btn-edit fa-solid fa-pen-to-square" data-taskid="${item.id}"></i></span>
       <span class="text-xl me-2 cursor-pointer" data-taskid="${item.id}"><i class="fa-solid fa-trash btn-delete" data-taskid="${item.id}"></i></span>
     </div>  
   </div>
@@ -144,7 +143,6 @@ document.addEventListener('click', function(event){
 
   if(target.classList.contains('btn-delete')){
     const taskId = target.dataset.taskid;
-    console.log(taskId)
     removeTask(taskId)
   }
 
@@ -169,6 +167,11 @@ document.addEventListener('click', function(event){
     // stop sound 
     sound.currentTime = 0;
     sound.pause()
+  }
+
+  if(target.classList.contains('btn-edit')){
+    const taskId = target.dataset.taskid;
+    editTask(taskId)
   }
 })
 
@@ -237,7 +240,14 @@ function countdown(){
       minutes = parseInt(minutes)
       seconds = parseInt(seconds)
 
-      sound.play()
+      // sound.play()
+      if(timerBreak == '05:00'){
+        sound.play()
+      } else {
+        sound.play()  
+        sound.addEventListener('ended', repeatSound);
+      }
+
       // minutes = 1
       // seconds = 0
     } else {
@@ -290,6 +300,37 @@ speedBtn.addEventListener('click', function(){
   speedBtn.innerHTML = speed == 1 ? `<i class="fa-solid fa-angles-right"></i>` : `${speed}<i class="fa-solid fa-angles-right"></i>`
 })
 
+function changeSound(time){
+  if(time == '05:00'){
+    sound = new Audio("sound/Vestia Zeta.mp3");
+  } else {
+    sound = new Audio("sound/Aku Gak Halu.mp3");
+  }
+  return sound;
+}
+
+// fungsi mengulang sound
+function repeatSound() {
+  sound.currentTime = 0; 
+  sound.play(); 
+}
+
+// fungsi edit
+function editTask(taskId) {
+  const taskTarget = findTask(taskId);
+  const editForm = document.querySelector('#edit-task');
+  editForm.classList.toggle('hidden');
+
+  editForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    taskTarget.title = document.querySelector('#title-edit').value
+
+    saveData()
+    render(tasks)
+  }) 
+}
+
+
 //tombol break
 shortBtn.addEventListener('click', function(){
   if(shortBtn.classList.contains('bg-[#9CCDDC]')){ 
@@ -301,8 +342,9 @@ shortBtn.addEventListener('click', function(){
     longBtn.classList.add('bg-[#9CCDDC]')
     longBtn.innerHTML = 'long break'
     longBtn.removeAttribute('disabled')
-    sound = new Audio("sound/JKT48 - Pesawat Kertas 365 Hari.mp3")
+    // sound = new Audio("sound/JKT48 - Pesawat Kertas 365 Hari.mp3")
     timerBreak = shortBtn.dataset.time;
+    changeSound(timerBreak)
   } else {
     shortBtn.classList.remove('border-slate-700','bg-[#CED7E0]')
     shortBtn.classList.add('bg-[#9CCDDC]')
@@ -320,8 +362,9 @@ longBtn.addEventListener('click', function(){
     shortBtn.classList.add('bg-[#9CCDDC]')
     shortBtn.innerHTML = 'short break'
     shortBtn.removeAttribute('disabled')
-    sound = new Audio("sound/JKT48 - SEVENTEEN.mp3")
+    // sound = new Audio("sound/JKT48 - SEVENTEEN.mp3")
     timerBreak = longBtn.dataset.time
+    changeSound(timerBreak)
   } else {
     longBtn.classList.remove('border-slate-700','bg-[#CED7E0]')
     longBtn.classList.add('bg-[#9CCDDC]')
@@ -361,7 +404,6 @@ function loadDataFromStorage(){
   }
   render(tasks)
 }
-
 
 // function capitalFirsWord
 function capitalFirsWord(word){

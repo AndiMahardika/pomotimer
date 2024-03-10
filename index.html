@@ -70,13 +70,21 @@
         <div class="flex items-center justify-end">
           <button type="button" class="border-4 w-fit px-2 rounded-sm bg-[#062C43] hover:bg-[#3c6177] text-slate-200 transition-all duration-300 close-button"><i class="fa-solid fa-xmark"></i></button>
         </div>
-        <h4 class="text-center text-lg font-semibold ">Add Task</h4>
+        <h4 class="text-center text-lg font-semibold title-form">Add Task</h4>
         <form action="" class="mt-3" id="input-task">
           <input type="text" id="input-title" class="px-3 py-2 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-[#062C43] transition-all duration-300" placeholder="Exemple">
-          <button class="border-4 px-10 py-1 mt-4 rounded-md font-semibold bg-[#062C43] hover:bg-[#3c6177] text-slate-200 transition-all duration-300">Add</button>
+          <button type="submit" class="border-4 px-10 py-1 mt-4 rounded-md font-semibold bg-[#062C43] hover:bg-[#3c6177] text-slate-200 transition-all duration-300 btn-add">Add</button>
         </form>
       </div>
       <!-- input end -->
+
+      <!-- edit start-->
+      <form action="" id="edit-task" class="bg-red-500 hidden" autocomplete="off" >
+        <h3>edit</h3>
+        <input type="text" id="title-edit">
+        <button type="submit" id="edit-btn" class="bg-slate-300 p-3"> edit </button>
+      </form>
+      <!-- edit end -->
     </div>
   </div>
   <script src="index.js"></script>
