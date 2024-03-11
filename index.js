@@ -83,11 +83,10 @@ function taskSelect(taskTarget){
 
 function itemTask(item){
   return `<div class="mb-3 bg-[#CED7E0] text-slate-800">
-  <div class="${item.status ? 'border-4 border-slate-700' : 'border-2'} flex items-center justify-between items " data-curtime="${item.curTime}" data-taskid="${item.id}">
-    <div class="h-10 w-3 bg-[#5591A9]"></div>
-    <h4 class="text-center text-md font-semibold">${item.title}</h4>
-    <div class="">
-      <span class="text-xl me-2 cursor-pointer ${item.status ? 'text-green-600': 'text-red-600'}"><i class="fa-solid fa-square-check"></i></span>
+  <div class="${item.status ? 'border-4 border-slate-700' : 'border-2'} flex items-center justify-between items p-1" data-curtime="${item.curTime}" data-taskid="${item.id}">
+    <h4 class="text-md font-semibold">${item.title}</h4>
+    <div class="bmin-w-max">
+      <span class="text-xl me-2 cursor-pointer ${item.status ? 'text-green-600': 'text-red-600'}"><i class="fa-solid fa-square-check select" data-taskid="${item.id}"></i></span>
       <span class="text-xl me-2 cursor-pointer" data-taskid="${item.id}"><i class="btn-edit fa-solid fa-pen-to-square" data-taskid="${item.id}"></i></span>
       <span class="text-xl me-2 cursor-pointer" data-taskid="${item.id}"><i class="fa-solid fa-trash btn-delete" data-taskid="${item.id}"></i></span>
     </div>  
@@ -149,7 +148,7 @@ document.addEventListener('click', function(event){
     removeTask(taskId)
   }
 
-  if(target.classList.contains('items')){
+  if(target.classList.contains('select')){
     target.classList.toggle('border-4');
     target.classList.toggle('border-slate-700');
     const taskTarget = findTask(target.dataset.taskid);
